@@ -16,6 +16,7 @@ if (!keycloakIssuer || !keycloakClientId || !keycloakClientSecret) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
   providers: [
     Keycloak({
       issuer: keycloakIssuer,
