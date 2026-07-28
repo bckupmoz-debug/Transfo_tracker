@@ -26,11 +26,22 @@ export default async function Page() {
               </form>
             </>
           ) : (
-            <form action={async () => { "use server"; await signIn("keycloak"); }}>
-              <button type="submit" className="rounded-md bg-ink px-3 py-2 text-sm font-semibold text-white">
-                Sign in with Keycloak
-              </button>
-            </form>
+            <div className="flex items-center gap-2">
+              <form action={async () => { "use server"; await signIn("keycloak"); }}>
+                <button type="submit" className="rounded-md bg-ink px-3 py-2 text-sm font-semibold text-white">
+                  Sign in with Keycloak
+                </button>
+              </form>
+              {/* Sign up link — Keycloak handles user registration when enabled on the realm */}
+              <a
+                href={`${process.env.AUTH_KEYCLOAK_ISSUER}/protocol/openid-connect/registrations?client_id=${process.env.AUTH_KEYCLOAK_ID}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-md border border-line px-3 py-2 text-sm font-medium text-ink"
+              >
+                Sign up
+              </a>
+            </div>
           )}
         </div>
       </section>
