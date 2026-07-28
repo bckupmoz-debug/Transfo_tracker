@@ -7,8 +7,22 @@ type KeycloakProfile = {
   };
 };
 
+const keycloakIssuer = process.env.AUTH_KEYCLOAK_ISSUER;
+const keycloakClientId = process.env.AUTH_KEYCLOAK_ID;
+const keycloakClientSecret = process.env.AUTH_KEYCLOAK_SECRET;
+
+if (!keycloakIssuer || !keycloakClientId || !keycloakClientSecret) {
+  throw new Error("Missing Keycloak environment variables. Set AUTH_KEYCLOAK_ISSUER, AUTH_KEYCLOAK_ID, and AUTH_KEYCLOAK_SECRET.");
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [Keycloak],
+  providers: [
+    Keycloak({
+      issuer: keycloakIssuer,
+      clientId: keycloakClientId,
+      clientSecret: keycloakClientSecret,
+    }),
+  ],
   callbacks: {
     authorized({ auth }) {
       return Boolean(auth?.user);
