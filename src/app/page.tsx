@@ -3,6 +3,15 @@ import Dashboard from "@/components/Dashboard";
 
 const cardClassName = "rounded-card border border-line bg-white p-4 shadow-card";
 
+const keycloakIssuer = process.env.AUTH_KEYCLOAK_ISSUER;
+const keycloakClientId = process.env.AUTH_KEYCLOAK_ID;
+const nextAuthUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "http://localhost:3000";
+const registrationUrl = keycloakIssuer && keycloakClientId
+  ? `${keycloakIssuer.replace(/\/$$/, "")}/protocol/openid-connect/registrations?client_id=${encodeURIComponent(
+      keycloakClientId,
+    )}&redirect_uri=${encodeURIComponent(nextAuthUrl)}`
+  : undefined;
+
 export default async function Page() {
   const session = await auth();
   const roles = session?.user.roles ?? [];
@@ -32,15 +41,16 @@ export default async function Page() {
                   Sign in with Keycloak
                 </button>
               </form>
-              {/* Sign up link — Keycloak handles user registration when enabled on the realm */}
-              <a
-                href={`${process.env.AUTH_KEYCLOAK_ISSUER}/protocol/openid-connect/registrations?client_id=${process.env.AUTH_KEYCLOAK_ID}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-md border border-line px-3 py-2 text-sm font-medium text-ink"
-              >
-                Sign up
-              </a>
+              {registrationUrl ? (
+                <a
+                  href={registrationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md border border-line px-3 py-2 text-sm font-medium text-ink"
+                >
+                  Sign up
+                </a>
+              ) : null}
             </div>
           )}
         </div>
