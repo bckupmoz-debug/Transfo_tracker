@@ -1,6 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+// Keep `next.config` simple and avoid importing `NextConfig` type
+const nextConfig = {
   /* config options here */
 };
 
