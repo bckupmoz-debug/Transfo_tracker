@@ -56,7 +56,7 @@ Add these values to `.env.local`:
 
 ```ini
 AUTH_SECRET=your-random-secret
-AUTH_KEYCLOAK_ID=evidence-app
+AUTH_KEYCLOAK_ID=transfo-tracker
 AUTH_KEYCLOAK_SECRET=your-keycloak-client-secret
 AUTH_KEYCLOAK_ISSUER=http://localhost:8080/realms/transformation
 NEXTAUTH_URL=http://localhost:3000
@@ -88,7 +88,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
 ```
 
-Then create a realm named `transformation` and a client named `evidence-app`.
+Then create a realm named `transformation` and a client named `transfo-tracker`.
 Use these redirect URIs for local development:
 
 - `http://localhost:3000/api/auth/callback/keycloak`
