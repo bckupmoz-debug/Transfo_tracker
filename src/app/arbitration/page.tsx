@@ -5,6 +5,16 @@ import SourceCard from "@/components/SourceCard";
 import { MOCK_ARBITRATIONS } from "@/lib/mock";
 import { FIT_GAP, BACKLOG_TARGETS, type FitGapClass, type BacklogTarget } from "@/lib/types";
 import { formatDate } from "@/lib/format";
+import { createClient } from '@/utils/supabase/client'
+
+const supabase = createClient()
+
+async function signInWithKeycloak() {
+  await supabase.auth.signInWithOAuth({
+    provider: 'keycloak',
+    options: { scopes: 'openid' }, // required since Keycloak 22
+  })
+}
 
 export default function Arbitration() {
   const a = MOCK_ARBITRATIONS[0];
