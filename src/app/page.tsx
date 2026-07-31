@@ -5,7 +5,16 @@ const cardClassName = "rounded-card border border-line bg-white p-4 shadow-card"
 
 const keycloakIssuer = process.env.AUTH_KEYCLOAK_ISSUER;
 const keycloakClientId = process.env.AUTH_KEYCLOAK_ID;
-const nextAuthUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "http://localhost:3000";
+
+const normalizeAppUrl = (url?: string) => {
+  if (!url) return undefined;
+  return url
+    .replace(/\/api\/auth\/callback\/keycloak\/?$/, "")
+    .replace(/\/$/, "");
+};
+
+const nextAuthUrl =
+  process.env.NEXTAUTH_URL || normalizeAppUrl(process.env.AUTH_URL) || "http://localhost:3000";
 const registrationUrl = keycloakIssuer && keycloakClientId
   ? `${keycloakIssuer.replace(/\/$$/, "")}/protocol/openid-connect/registrations?client_id=${encodeURIComponent(
       keycloakClientId,
