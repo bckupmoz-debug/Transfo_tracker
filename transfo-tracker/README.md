@@ -20,6 +20,53 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Keycloak local setup
+
+This project uses Keycloak for OpenID Connect authentication. Add these env vars to your local environment when running the app:
+
+```ini
+AUTH_SECRET=your-random-secret
+AUTH_KEYCLOAK_ID=evidence-app
+AUTH_KEYCLOAK_SECRET=your-keycloak-client-secret
+AUTH_KEYCLOAK_ISSUER=http://localhost:8080/realms/transformation
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-random-secret
+AUTH_URL=http://localhost:3000
+AUTH_TRUST_HOST=true
+```
+
+Start Keycloak with Docker:
+
+```bash
+docker run -d --name keycloak -p 8080:8080 \
+  -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  quay.io/keycloak/keycloak start-dev
+```
+
+Or use Docker Compose for a reproducible local service:
+
+```yaml
+version: '3.9'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.5
+    command: start-dev
+    ports:
+      - '8080:8080'
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+```
+
+Then create a realm named `transformation` and a confidential OpenID Connect client named `evidence-app`.
+
+Use these redirect URIs for local development:
+
+- `http://localhost:3000/api/auth/callback/keycloak`
+- `http://127.0.0.1:3000/api/auth/callback/keycloak`
+
+If you create a permanent admin user, keep those credentials in secure local docs or a secrets manager rather than source control.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
