@@ -69,7 +69,7 @@ Start Keycloak locally with either Docker or Docker Compose.
 
 ```bash
 docker run -d --name keycloak -p 8080:8080 \
-  -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  -e KEYCLOAK_ADMIN=test -e KEYCLOAK_ADMIN_PASSWORD=test \
   quay.io/keycloak/keycloak start-dev
 ```
 
@@ -84,8 +84,8 @@ services:
     ports:
       - '8080:8080'
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: test
+      KEYCLOAK_ADMIN_PASSWORD: test
 ```
 
 Then create a realm named `transformation` and a client named `transfo-tracker`.
