@@ -65,12 +65,27 @@ AUTH_URL=http://localhost:3000
 AUTH_TRUST_HOST=true
 ```
 
-Start Keycloak locally with:
+Start Keycloak locally with either Docker or Docker Compose.
 
 ```bash
 docker run -d --name keycloak -p 8080:8080 \
   -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin \
   quay.io/keycloak/keycloak start-dev
+```
+
+Or with Docker Compose:
+
+```yaml
+version: '3.9'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2.5
+    command: start-dev
+    ports:
+      - '8080:8080'
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
 ```
 
 Then create a realm named `transformation` and a client named `evidence-app`.
