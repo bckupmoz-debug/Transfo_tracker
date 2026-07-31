@@ -5,15 +5,19 @@ import SourceCard from "@/components/SourceCard";
 import { MOCK_ARBITRATIONS } from "@/lib/mock";
 import { FIT_GAP, BACKLOG_TARGETS, type FitGapClass, type BacklogTarget } from "@/lib/types";
 import { formatDate } from "@/lib/format";
-import { createClient } from '@/utils/supabase/client'
+import { supabase } from "@/lib/supabase";
 
-const supabase = createClient()
+if (!supabase) {
+  throw new Error("Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+}
+
+const configuredSupabase = supabase;
 
 async function signInWithKeycloak() {
-  await supabase.auth.signInWithOAuth({
-    provider: 'keycloak',
-    options: { scopes: 'openid' }, // required since Keycloak 22
-  })
+  await configuredSupabase.auth.signInWithOAuth({
+    provider: "keycloak",
+    options: { scopes: "openid" }, // required since Keycloak 22
+  });
 }
 
 export default function Arbitration() {
