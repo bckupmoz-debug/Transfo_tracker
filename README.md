@@ -40,12 +40,46 @@ Screens: **Dashboard** (filters, metrics, progress, timeline) ·
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in Supabase keys (optional for first look)
+cp .env.example .env.local
+# Fill in Supabase keys and Keycloak client secret
 npm run dev                  # http://localhost:3000
 ```
 
 Without Supabase keys the UI renders from mock data, so you can review it
 immediately. Add the keys to switch the queries to live data.
+
+### Keycloak
+
+The app expects a Keycloak realm and confidential client for authentication.
+
+Add these values to `.env.local`:
+
+```ini
+AUTH_SECRET=your-random-secret
+AUTH_KEYCLOAK_ID=evidence-app
+AUTH_KEYCLOAK_SECRET=your-keycloak-client-secret
+AUTH_KEYCLOAK_ISSUER=http://localhost:8080/realms/transformation
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-random-secret
+AUTH_URL=http://localhost:3000
+AUTH_TRUST_HOST=true
+```
+
+Start Keycloak locally with:
+
+```bash
+docker run -d --name keycloak -p 8080:8080 \
+  -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  quay.io/keycloak/keycloak start-dev
+```
+
+Then create a realm named `transformation` and a client named `evidence-app`.
+Use these redirect URIs for local development:
+
+- `http://localhost:3000/api/auth/callback/keycloak`
+- `http://127.0.0.1:3000/api/auth/callback/keycloak`
+
+If you create a permanent admin user, set it via the container env vars above and keep the credentials in your local run instructions or a secure secrets manager.
 
 ## Set up Supabase
 
