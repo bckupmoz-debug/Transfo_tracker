@@ -1,6 +1,8 @@
 import { handlers } from "@/auth";
 
 export const { GET, POST } = handlers;
+
+
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
