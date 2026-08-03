@@ -5,6 +5,8 @@ const cardClassName = "rounded-card border border-line bg-white p-4 shadow-card"
 
 const keycloakIssuer = process.env.AUTH_KEYCLOAK_ISSUER;
 const keycloakClientId = process.env.AUTH_KEYCLOAK_ID;
+const keycloakClientSecret = process.env.AUTH_KEYCLOAK_SECRET;
+const isKeycloakConfigured = Boolean(keycloakIssuer && keycloakClientId && keycloakClientSecret);
 
 const normalizeAppUrl = (url?: string) => {
   if (!url) return undefined;
@@ -15,7 +17,7 @@ const normalizeAppUrl = (url?: string) => {
 
 const nextAuthUrl =
   process.env.NEXTAUTH_URL || normalizeAppUrl(process.env.AUTH_URL) || "http://localhost:3000";
-const registrationUrl = keycloakIssuer && keycloakClientId
+const registrationUrl = isKeycloakConfigured && keycloakIssuer && keycloakClientId
   ? `${keycloakIssuer.replace(/\/$/, "")}/protocol/openid-connect/registrations?client_id=${encodeURIComponent(
       keycloakClientId,
     )}&redirect_uri=${encodeURIComponent(nextAuthUrl)}`
@@ -45,11 +47,17 @@ export default async function Page() {
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <form action={async () => { "use server"; await signIn("keycloak"); }}>
-                <button type="submit" className="rounded-md bg-ink px-3 py-2 text-sm font-semibold text-white">
-                  Sign in with Keycloak
-                </button>
-              </form>
+              {isKeycloakConfigured ? (
+                <form action={async () => { "use server"; await signIn("keycloak"); }}>
+                  <button type="submit" className="rounded-md bg-ink px-3 py-2 text-sm font-semibold text-white">
+                    Sign in with Keycloak
+                  </button>
+                </form>
+              ) : (
+                <span className="text-sm text-ink-soft">
+                  Authentication is not configured yet. Set the Keycloak environment variables to enable sign-in.
+                </span>
+              )}
               {registrationUrl ? (
                 <a
                   href={registrationUrl}

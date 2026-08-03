@@ -1,14 +1,16 @@
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/'
+  const { searchParams, origin } = new URL(request.url);
+  const error = searchParams.get("error");
+  const next = searchParams.get("next") ?? "/";
 
-  if (code && supabase) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) return NextResponse.redirect(`${origin}${next}`)
+  if (error) {
+    const errorUrl = new URL("/auth/auth-code-error", origin);
+    errorUrl.searchParams.set("error", error);
+    return NextResponse.redirect(errorUrl);
   }
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+
+  const fallbackPath = next.startsWith("/") ? next : "/";
+  return NextResponse.redirect(new URL(fallbackPath, origin));
 }

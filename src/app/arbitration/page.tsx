@@ -7,13 +7,11 @@ import { FIT_GAP, BACKLOG_TARGETS, type FitGapClass, type BacklogTarget } from "
 import { formatDate } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
 
-if (!supabase) {
-  throw new Error("Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
-}
-
 const configuredSupabase = supabase;
 
 async function signInWithKeycloak() {
+  if (!configuredSupabase) return;
+
   await configuredSupabase.auth.signInWithOAuth({
     provider: "keycloak",
     options: { scopes: "openid" }, // required since Keycloak 22

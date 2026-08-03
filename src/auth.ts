@@ -7,6 +7,7 @@ type KeycloakProfile = {
   };
 };
 
+const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
 const keycloakIssuer = process.env.AUTH_KEYCLOAK_ISSUER;
 const keycloakClientId = process.env.AUTH_KEYCLOAK_ID;
 const keycloakClientSecret = process.env.AUTH_KEYCLOAK_SECRET;
@@ -22,6 +23,7 @@ const providers = keycloakIssuer && keycloakClientId && keycloakClientSecret
   : [];
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  secret: authSecret,
   trustHost: true,
   providers,
   callbacks: {
