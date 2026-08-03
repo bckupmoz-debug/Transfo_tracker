@@ -16,7 +16,7 @@ const normalizeAppUrl = (url?: string) => {
 const nextAuthUrl =
   process.env.NEXTAUTH_URL || normalizeAppUrl(process.env.AUTH_URL) || "http://localhost:3000";
 const registrationUrl = keycloakIssuer && keycloakClientId
-  ? `${keycloakIssuer.replace(/\/$$/, "")}/protocol/openid-connect/registrations?client_id=${encodeURIComponent(
+  ? `${keycloakIssuer.replace(/\/$/, "")}/protocol/openid-connect/registrations?client_id=${encodeURIComponent(
       keycloakClientId,
     )}&redirect_uri=${encodeURIComponent(nextAuthUrl)}`
   : undefined;
