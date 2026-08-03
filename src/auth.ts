@@ -12,7 +12,8 @@ const keycloakIssuer = process.env.AUTH_KEYCLOAK_ISSUER;
 const keycloakClientId = process.env.AUTH_KEYCLOAK_ID;
 const keycloakClientSecret = process.env.AUTH_KEYCLOAK_SECRET;
 
-const providers = keycloakIssuer && keycloakClientId && keycloakClientSecret
+const hasKeycloakConfig = Boolean(keycloakIssuer && keycloakClientId && keycloakClientSecret);
+const providers = hasKeycloakConfig
   ? [
       Keycloak({
         issuer: keycloakIssuer,
